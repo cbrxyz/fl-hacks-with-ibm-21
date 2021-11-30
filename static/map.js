@@ -4,7 +4,7 @@ var map = L.map('map').setView([28.5384, -81.3789], 7);
 window.map = map;
 
 L.tileLayer('https://tiles.wmflabs.org/bw-mapnik/{z}/{x}/{y}.png', {
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors | Data provided from <a href="https://www.nrel.gov">NREL</a>'
 }).addTo(map);
 
 var southWest = L.latLng(24.5959, -87.8256),
@@ -110,54 +110,42 @@ $.getJSON("static/solar_points.json")
         }
     });
 
+$("#darkModeButton").click(toggleDarkMode);
+
 // On dark mode event
 function toggleDarkMode() {
-    /*
-     * $("h3").css("font-size", "11px"); Changes all <h3> font-size to 11px
-     * $("#map").css("background-color", "purple"); Changes the element of <... id="map"> to have a purple background color
-     * $(".myClass").css("margin", 0); Removes the margin around all elements with <... class="myClass">
-     */
-    // key dark mode
-    $(".overlay").css(background - color, black);
-    $("h2").css("font-color", white);
-    $(".keydiagram").css("background", "linear-gradient(90 deg, rgba(231, 85, 223, 1) 0% , rgba(205, 99, 227, 1) 11 % , rgba(182, 112, 230, 1) 22 % , rgba(161, 124, 232, 1) 34 % , rgba(148, 131, 234, 1) 47 % , rgba(120, 146, 238, 1) 58 % , rgba(90, 162, 242, 1) 70 % , rgba(58, 180, 247, 1) 81 % , rgba(27, 197, 251, 1) 91 % , rgba(0, 212, 255, 1) 100 % )");
+    // Remove dark mode button now that it has been toggled
+    $("#darkModeButton").remove();
 
-
-    // map markers
-
+    $("#overlay").css("background-color", "black").css("color", "white");
+    $(".keyDiagram").css({
+        background: "linear-gradient(90deg, rgba(231, 85, 223, 1) 0% , rgba(205, 99, 227, 1) 11%, rgba(182, 112, 230, 1) 22%, rgba(161, 124, 232, 1) 34%, rgba(148, 131, 234, 1) 47%, rgba(120, 146, 238, 1) 58%, rgba(90, 162, 242, 1) 70%, rgba(58, 180, 247, 1) 81%, rgba(27, 197, 251, 1) 91%, rgba(0, 212, 255, 1) 100%)"
+    });
 
     for (let i = 0; i < window.circles.length; i++) {
-        if (window.circleObj[i].watts < 50) {
-            window.circleObj[i].setStyle({ color: "#e755df" }) // pink
-        } else if (window.circleObj[i].watts < 500) {
-            window.circleObj[i].setStyle({ color: "#cd63e3" });
-        } else if (window.circleObj[i].watts < 1000) {
-            window.circleObj[i].setStyle({ color: "#b670e6" });
-        } else if (window.circleObj[i].watts < 1500) {
-            window.circleObj[i].setStyle({ color: "#a17ce8" });
-        } else if (window.circleObj[i].watts < 2000) {
-            window.circleObj[i].setStyle({ color: "#9483ea" }); //purple
-        } else if (window.circleObj[i].watts < 2500) {
-            window.circleObj[i].setStyle({ color: "#7892ee" });
-        } else if (window.circleObj[i].watts < 3000) {
-            window.circleObj[i].setStyle({ color: "#5aa2f2" }); //blue
-        } else if (window.circleObj[i].watts < 3500) {
-            window.circleObj[i].setStyle({ color: "#3ab4f7" });
-        } else if (window.circleObj[i].watts < 4000) {
-            window.circleObj[i].setStyle({ color: "#1bc5fb" });
+        if (window.circles[i].watts < 50) {
+            window.circles[i].object.setStyle({ color: "#e755df" }) // pink
+        } else if (window.circles[i].watts < 500) {
+            window.circles[i].object.setStyle({ color: "#cd63e3" });
+        } else if (window.circles[i].watts < 1000) {
+            window.circles[i].object.setStyle({ color: "#b670e6" });
+        } else if (window.circles[i].watts < 1500) {
+            window.circles[i].object.setStyle({ color: "#a17ce8" });
+        } else if (window.circles[i].watts < 2000) {
+            window.circles[i].object.setStyle({ color: "#9483ea" }); //purple
+        } else if (window.circles[i].watts < 2500) {
+            window.circles[i].object.setStyle({ color: "#7892ee" });
+        } else if (window.circles[i].watts < 3000) {
+            window.circles[i].object.setStyle({ color: "#5aa2f2" }); //blue
+        } else if (window.circles[i].watts < 3500) {
+            window.circles[i].object.setStyle({ color: "#3ab4f7" });
+        } else if (window.circles[i].watts < 4000) {
+            window.circles[i].object.setStyle({ color: "#1bc5fb" });
         } else {
-            window.circleObj[i].setStyle({ color: "#00d4ff" });
+            window.circles[i].object.setStyle({ color: "#00d4ff" });
         }
     }
-
-    //map background
-
 }
-
-$("#darkModeButton").on((e) => {
-    e.preventDefault();
-    $(this).text("Light Mode");
-});
 
 // Searches a given address and zooms in on location
 function search(address) {
@@ -169,7 +157,7 @@ function search(address) {
                 // Response was found
                 window.map.setView([responses[0].lat, responses[0].lon], 18);
             } else {
-                // Response was not found
+                window.alert(`Unfortunately, ${address} could not be found.`);
             }
         });
 }
