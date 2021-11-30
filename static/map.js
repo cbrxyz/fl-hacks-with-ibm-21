@@ -23,7 +23,7 @@ map.setMinZoom(map.getBoundsZoom(map.options.maxBounds));
 // 1. Call the /assets/solar_points.json file
 window.circles = [];
 
-$.getJSON("/assets/solar_points.json")
+$.getJSON("static/solar_points.json")
     .done((json) => {
         for (let i = 0; i < json.length; i++) {
             // Marker data
